@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventory · Daybreak Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="icon-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
+  <a href="index.html" class="logo-link"><img src="assets/logo-primary-navy.svg" alt="Daybreak Cards" class="header-logo" /></a>
+  <div class="icon-btn" id="darkToggle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg></div>
+</div>
+
+<nav class="page-nav">
+  <a href="index.html">Home</a>
+  <a href="inventory.html" class="active">Inventory</a>
+  <a href="events.html">Events</a>
+  <a href="about.html">About</a>
+  <a href="faq.html">FAQ</a>
+  <a href="sell.html">Sell to us</a>
+  <a href="wanted.html">Wanted</a>
+</nav>
+
+<div class="wrap">
+  <div class="browse-topbar">
+    <div class="inv-heading">What's in stock</div>
+    <button class="cart-btn" id="cartBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.6 13.4a2 2 0 002 1.6h9.7a2 2 0 002-1.6L23 6H6"/></svg>
+      Cart <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+
+  <div class="controls-row">
+    <div class="filters">
+      <input class="search-input" id="searchInput" placeholder="Search these cards…" />
+      <button class="filter-chip" id="filtersBtn" style="display:flex;align-items:center;gap:6px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:12px;height:12px;"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+        Filters
+      </button>
+    </div>
+    <select class="sort-select" id="sortSelect">
+      <option value="price-desc">Price: high to low</option>
+      <option value="price-asc">Price: low to high</option>
+      <option value="name-asc">Name: A–Z</option>
+      <option value="rarity">Rarity</option>
+    </select>
+  </div>
+
+  <div class="product-grid" id="productGrid">
+    <div class="empty-inventory">Loading inventory…</div>
+  </div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <div class="cart-title">Your cart</div>
+    <button class="cart-close" id="cartClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">A$0.00</span></div>
+    <button class="checkout-btn" id="checkoutBtn">Request to reserve</button>
+    <div class="cart-hint">We'll message you to confirm before a show — nothing is charged online. Offers are subject to approval.</div>
+  </div>
+</div>
+
+<div class="cart-overlay" id="filtersOverlay"></div>
+<div class="cart-drawer" id="filtersDrawer">
+  <div class="cart-head">
+    <div class="cart-title">Filters</div>
+    <button class="cart-close" id="filtersClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="cart-items">
+    <div class="filter-group">
+      <div class="filter-group-title">Rarity</div>
+      <label class="filter-check"><input type="checkbox" class="rarityCheck" value="rare" checked /> Rare / Holo</label>
+      <label class="filter-check"><input type="checkbox" class="rarityCheck" value="common" checked /> Common / Uncommon</label>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-title">Price range (AUD)</div>
+      <div class="price-range-row">
+        <input type="number" id="priceMin" placeholder="Min" min="0" />
+        <span>–</span>
+        <input type="number" id="priceMax" placeholder="Max" min="0" />
+      </div>
+    </div>
+  </div>
+  <div class="cart-foot">
+    <button class="checkout-btn" id="applyFiltersBtn">Apply filters</button>
+    <button class="submit-btn" id="clearFiltersBtn" style="margin-top:10px;background:transparent;color:var(--graphite);border:1px solid var(--line);">Clear all</button>
+  </div>
+</div>
+
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-modal" id="detailModal"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+document.getElementById('darkToggle').addEventListener('click', () => document.body.classList.toggle('dark'));
+
+document.getElementById('menuBtn').addEventListener('click', () => {
+  document.getElementById('menuDrawer').classList.add('show');
+  document.getElementById('menuOverlay').classList.add('show');
+});
+document.getElementById('menuClose').addEventListener('click', closeMenu);
+document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+function closeMenu(){
+  document.getElementById('menuDrawer').classList.remove('show');
+  document.getElementById('menuOverlay').classList.remove('show');
+}
+
+
+let ALL_CARDS = [];
+let filtered = [];
+let cart = JSON.parse(localStorage.getItem('daybreak_cart') || '[]');
+let activeRarities = ['rare','common'];
+let priceMin = null, priceMax = null;
+
+function saveCart(){ localStorage.setItem('daybreak_cart', JSON.stringify(cart)); }
+
+function rarityBucket(card){
+  const r = (card.rarity || '').toLowerCase();
+  if (r.includes('common') || r.includes('uncommon')) return 'common';
+  return 'rare';
+}
+
+async function loadInventory(){
+  try{
+    const resp = await fetch('/.netlify/functions/get-inventory');
+    const data = await resp.json();
+    if (!resp.ok || data.error){
+      document.getElementById('productGrid').innerHTML = `<div class="empty-inventory">Couldn't load inventory: ${data.error || 'unknown error'}</div>`;
+      return;
+    }
+    ALL_CARDS = (data.cards || []).filter(c => (c.qty || 0) > 0);
+    applyFiltersAndSort();
+  }catch(err){
+    document.getElementById('productGrid').innerHTML = `<div class="empty-inventory">Couldn't reach the inventory service. Try refreshing.</div>`;
+  }
+}
+
+function renderGrid(){
+  const grid = document.getElementById('productGrid');
+  if (!filtered.length){
+    grid.innerHTML = `<div class="empty-inventory">${ALL_CARDS.length ? 'No cards match that search.' : 'No cards in stock yet — check back soon.'}</div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map((c, i) => {
+    const stockLabel = c.qty === 1 ? 'Last one' : `×${c.qty}`;
+    const priceLabel = c.price != null ? `A$${Number(c.price).toFixed(2)}` : 'Ask price';
+    return `
+    <div class="product-card" style="animation-delay:${Math.min(i*0.04,0.4)}s" data-id="${c.id}">
+      <div class="detail-trigger" data-id="${c.id}" style="cursor:pointer;">
+        <div class="product-media">
+          <div class="stock-pill"><span class="dot"></span>In stock</div>
+          <div class="rarity-pill">${rarityBucket(c) === 'rare' ? 'Rare' : 'Common'}</div>
+          <img src="${c.image}" alt="${c.name}" loading="lazy" />
+          <div class="qty-pill">${stockLabel}</div>
+        </div>
+        <div class="product-body" style="padding-bottom:0;">
+          <div class="product-name">${c.name}</div>
+          <div class="product-set">${c.set} · #${c.number}</div>
+        </div>
+      </div>
+      <div class="product-body" style="padding-top:9px;">
+        <div class="cond-badge">${c.condition}</div>
+        <div class="price-row">
+          <div class="price-live">
+            <div class="price-fixed">${priceLabel}</div>
+          </div>
+          <button class="add-btn" data-id="${c.id}" aria-label="Add to cart">
+            <svg class="icon-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <svg class="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+          </button>
+        </div>
+        <button class="offer-btn" data-id="${c.id}">Make an offer instead</button>
+        <div class="offer-row" id="offerRow-${c.id}">
+          <input type="number" id="offerInput-${c.id}" placeholder="Your offer (AUD)" min="0" />
+          <button onclick="submitOffer('${c.id}')">Send</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.detail-trigger').forEach(el => {
+    el.addEventListener('click', () => openDetail(el.dataset.id));
+  });
+  grid.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', () => addToCart(btn.dataset.id, btn));
+  });
+  grid.querySelectorAll('.offer-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById(`offerRow-${btn.dataset.id}`).classList.toggle('show');
+    });
+  });
+}
+
+function openDetail(id){
+  const c = ALL_CARDS.find(x => x.id === id);
+  if (!c) return;
+  const priceLabel = c.price != null ? `A$${Number(c.price).toFixed(2)}` : 'Ask price';
+  const stockLabel = c.qty === 1 ? 'Last one in stock' : `${c.qty} in stock`;
+  document.getElementById('detailModal').innerHTML = `
+    <button class="detail-close" onclick="closeDetail()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="detail-grid">
+      <div class="detail-image"><img src="${c.image}" alt="${c.name}" /></div>
+      <div class="detail-info">
+        <div class="detail-name">${c.name}</div>
+        <div class="detail-meta">${c.set} · #${c.number}${c.rarity ? ' · ' + c.rarity : ''}</div>
+        <div class="detail-row"><span>Condition</span><span>${c.condition}</span></div>
+        <div class="detail-row"><span>Availability</span><span>${stockLabel}</span></div>
+        <div class="detail-price">${priceLabel}</div>
+        <div class="detail-actions">
+          <button class="btn btn-primary" style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;padding:12px;border:none;border-radius:8px;background:var(--navy);color:#fff;cursor:pointer;" onclick="addToCart('${c.id}'); closeDetail();">Add to cart</button>
+          <button class="btn btn-ghost" style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;padding:12px;border:1px solid var(--line);border-radius:8px;background:transparent;color:var(--ink);cursor:pointer;" onclick="closeDetail(); setTimeout(() => document.getElementById('offerRow-${c.id}').classList.add('show'), 50);">Make an offer instead</button>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('detailOverlay').classList.add('show');
+}
+function closeDetail(){
+  document.getElementById('detailOverlay').classList.remove('show');
+}
+document.getElementById('detailOverlay').addEventListener('click', e => {
+  if (e.target.id === 'detailOverlay') closeDetail();
+});
+
+function applyFiltersAndSort(){
+  const s = document.getElementById('searchInput').value.toLowerCase();
+  const sort = document.getElementById('sortSelect').value;
+
+  filtered = ALL_CARDS.filter(c => {
+    if (!c.name.toLowerCase().includes(s)) return false;
+    if (!activeRarities.includes(rarityBucket(c))) return false;
+    if (priceMin !== null && (c.price == null || c.price < priceMin)) return false;
+    if (priceMax !== null && (c.price == null || c.price > priceMax)) return false;
+    return true;
+  });
+
+  filtered.sort((a,b) => {
+    if (sort === 'price-desc') return (b.price||0) - (a.price||0);
+    if (sort === 'price-asc') return (a.price||0) - (b.price||0);
+    if (sort === 'name-asc') return a.name.localeCompare(b.name);
+    if (sort === 'rarity') return (rarityBucket(b)==='rare'?1:0) - (rarityBucket(a)==='rare'?1:0);
+    return 0;
+  });
+  renderGrid();
+}
+
+document.getElementById('searchInput').addEventListener('input', applyFiltersAndSort);
+document.getElementById('sortSelect').addEventListener('change', applyFiltersAndSort);
+
+function openFilters(){ document.getElementById('filtersDrawer').classList.add('show'); document.getElementById('filtersOverlay').classList.add('show'); }
+function closeFilters(){ document.getElementById('filtersDrawer').classList.remove('show'); document.getElementById('filtersOverlay').classList.remove('show'); }
+document.getElementById('filtersBtn').addEventListener('click', openFilters);
+document.getElementById('filtersClose').addEventListener('click', closeFilters);
+document.getElementById('filtersOverlay').addEventListener('click', closeFilters);
+document.getElementById('applyFiltersBtn').addEventListener('click', () => {
+  activeRarities = Array.from(document.querySelectorAll('.rarityCheck:checked')).map(el => el.value);
+  const minVal = document.getElementById('priceMin').value;
+  const maxVal = document.getElementById('priceMax').value;
+  priceMin = minVal ? parseFloat(minVal) : null;
+  priceMax = maxVal ? parseFloat(maxVal) : null;
+  applyFiltersAndSort();
+  closeFilters();
+  showToast('Filters applied');
+});
+document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+  document.querySelectorAll('.rarityCheck').forEach(el => el.checked = true);
+  document.getElementById('priceMin').value = '';
+  document.getElementById('priceMax').value = '';
+  activeRarities = ['rare','common']; priceMin = null; priceMax = null;
+  applyFiltersAndSort();
+});
+
+/* ---------- Cart (persisted via localStorage — fine on a real hosted site) ---------- */
+function addToCart(id, btnEl){
+  const card = ALL_CARDS.find(c => c.id === id);
+  if (!card) return;
+  const existing = cart.find(item => item.id === id);
+  if (existing) existing.qty = Math.min(existing.qty + 1, card.qty);
+  else cart.push({ id, qty: 1 });
+  saveCart();
+  renderCart();
+  showToast('Added to cart');
+  if (btnEl){ btnEl.classList.add('added'); setTimeout(() => btnEl.classList.remove('added'), 900); }
+  const countEl = document.getElementById('cartCount');
+  countEl.classList.remove('bump'); void countEl.offsetWidth; countEl.classList.add('bump');
+}
+function changeQty(idx, delta){
+  cart[idx].qty += delta;
+  if (cart[idx].qty <= 0) cart.splice(idx,1);
+  saveCart(); renderCart();
+}
+function removeItem(idx){ cart.splice(idx,1); saveCart(); renderCart(); }
+
+function renderCart(){
+  const totalQty = cart.reduce((s,i) => s + i.qty, 0);
+  document.getElementById('cartCount').textContent = totalQty;
+  const itemsEl = document.getElementById('cartItems');
+  if (!cart.length){
+    itemsEl.innerHTML = `<div class="cart-empty">Your cart is empty — add something from the grid.</div>`;
+  } else {
+    itemsEl.innerHTML = cart.map((item, idx) => {
+      const card = ALL_CARDS.find(c => c.id === item.id);
+      if (!card) return '';
+      const unitPrice = card.price || 0;
+      return `
+      <div class="cart-item">
+        <img src="${card.image}" alt="${card.name}" />
+        <div class="cart-item-info">
+          <div class="cart-item-name">${card.name}</div>
+          <div class="cart-item-meta">${card.condition}</div>
+          <div class="cart-item-row">
+            <div class="qty-stepper">
+              <button class="qty-btn" onclick="changeQty(${idx},-1)">–</button>
+              ${item.qty}
+              <button class="qty-btn" onclick="changeQty(${idx},1)">+</button>
+            </div>
+            <div class="cart-item-price">A$${(unitPrice*item.qty).toFixed(2)}</div>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${idx})">Remove</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  const subtotal = cart.reduce((s,item) => {
+    const card = ALL_CARDS.find(c => c.id === item.id);
+    return s + (card ? (card.price||0) * item.qty : 0);
+  }, 0);
+  document.getElementById('cartSubtotal').textContent = `A$${subtotal.toFixed(2)}`;
+}
+
+function openCart(){ document.getElementById('cartDrawer').classList.add('show'); document.getElementById('cartOverlay').classList.add('show'); }
+function closeCart(){ document.getElementById('cartDrawer').classList.remove('show'); document.getElementById('cartOverlay').classList.remove('show'); }
+document.getElementById('cartBtn').addEventListener('click', openCart);
+document.getElementById('cartClose').addEventListener('click', closeCart);
+document.getElementById('cartOverlay').addEventListener('click', closeCart);
+document.getElementById('checkoutBtn').addEventListener('click', () => {
+  if (!cart.length){ showToast('Your cart is empty'); return; }
+  showToast("Request sent — we'll message you to confirm");
+  cart = []; saveCart(); renderCart();
+  setTimeout(closeCart, 900);
+});
+
+function submitOffer(id){
+  const card = ALL_CARDS.find(c => c.id === id);
+  const input = document.getElementById(`offerInput-${id}`);
+  const amount = parseFloat(input.value);
+  if (!amount || amount <= 0){ showToast('Enter an offer amount first'); return; }
+  // Offers are UI-only for now — no backend table wired up to receive them yet.
+  showToast(`Offer of A$${amount.toFixed(2)} on ${card.name} noted — we'll be in touch`);
+  document.getElementById(`offerRow-${id}`).classList.remove('show');
+  input.value = '';
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+loadInventory();
+renderCart();
+</script>
+
+<div class="cart-overlay" id="menuOverlay"></div>
+<div class="cart-drawer" id="menuDrawer">
+  <div class="cart-head">
+    <div class="cart-title">Menu</div>
+    <button class="cart-close" id="menuClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="cart-items">
+    <a href="index.html" class="menu-link">Home</a>
+    <a href="inventory.html" class="menu-link">Inventory</a>
+    <a href="events.html" class="menu-link">Events</a>
+    <a href="about.html" class="menu-link">About</a>
+    <a href="faq.html" class="menu-link">FAQ</a>
+    <a href="sell.html" class="menu-link">Sell to us</a>
+    <a href="wanted.html" class="menu-link">Wanted</a>
+  </div>
+</div>
+</body>
+</html>

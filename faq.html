@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FAQ · Daybreak Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="icon-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
+  <a href="index.html" class="logo-link"><img src="assets/logo-primary-navy.svg" alt="Daybreak Cards" class="header-logo" /></a>
+  <div class="icon-btn" id="darkToggle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg></div>
+</div>
+
+<nav class="page-nav">
+  <a href="index.html">Home</a>
+  <a href="inventory.html">Inventory</a>
+  <a href="events.html">Events</a>
+  <a href="about.html">About</a>
+  <a href="faq.html" class="active">FAQ</a>
+  <a href="sell.html">Sell to us</a>
+  <a href="wanted.html">Wanted</a>
+</nav>
+
+<div class="wrap">
+  <div class="subpage show">
+    <div class="subpage-head">
+      <div class="subpage-title">Frequently asked questions</div>
+      <div class="subpage-sub">Common questions</div>
+    </div>
+    <div id="faqAccordion"></div>
+  </div>
+</div>
+
+<script>
+document.getElementById('darkToggle').addEventListener('click', () => document.body.classList.toggle('dark'));
+
+document.getElementById('menuBtn').addEventListener('click', () => {
+  document.getElementById('menuDrawer').classList.add('show');
+  document.getElementById('menuOverlay').classList.add('show');
+});
+document.getElementById('menuClose').addEventListener('click', closeMenu);
+document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+function closeMenu(){
+  document.getElementById('menuDrawer').classList.remove('show');
+  document.getElementById('menuOverlay').classList.remove('show');
+}
+
+
+const FAQ_ITEMS = [
+  { q:"Do you sell online?", a:"You can browse and reserve here, but payment happens in person at a show — nothing is charged online." },
+  { q:"What do you buy, sell, or trade?", a:"A hand-picked mix of chases, illustration rares, and Japanese & Chinese exclusives. We don't currently buy or trade for graded slabs." },
+  { q:"Can I reserve a card before a show?", a:"Yes — message us and we'll hold it for pickup at the next event we're both at." },
+  { q:"What payment do you accept at a show?", a:"Cash, card, and most contactless wallets — plus bank transfer if that's easier." },
+  { q:"Do you buy collections?", a:"Yes — head to Sell to us and tell us what you've got for a quote." },
+  { q:"Do you grade condition yourselves?", a:"We inspect every card in hand under good light before it's listed. Condition tags reflect our own call, not an automated estimate." },
+  { q:"How current is the inventory list?", a:"Updated the moment a card is scanned in, so what you see here is what's actually in the case." }
+];
+document.getElementById('faqAccordion').innerHTML = FAQ_ITEMS.map((item,i) => `
+  <div class="accordion-item" id="faq-${i}">
+    <div class="accordion-q" onclick="toggleFaq(${i})">
+      ${item.q}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </div>
+    <div class="accordion-a"><div class="accordion-a-inner">${item.a}</div></div>
+  </div>
+`).join('');
+function toggleFaq(i){ document.getElementById(`faq-${i}`).classList.toggle('open'); }
+</script>
+
+<div class="cart-overlay" id="menuOverlay"></div>
+<div class="cart-drawer" id="menuDrawer">
+  <div class="cart-head">
+    <div class="cart-title">Menu</div>
+    <button class="cart-close" id="menuClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="cart-items">
+    <a href="index.html" class="menu-link">Home</a>
+    <a href="inventory.html" class="menu-link">Inventory</a>
+    <a href="events.html" class="menu-link">Events</a>
+    <a href="about.html" class="menu-link">About</a>
+    <a href="faq.html" class="menu-link">FAQ</a>
+    <a href="sell.html" class="menu-link">Sell to us</a>
+    <a href="wanted.html" class="menu-link">Wanted</a>
+  </div>
+</div>
+</body>
+</html>

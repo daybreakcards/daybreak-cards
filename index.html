@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daybreak Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="icon-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
+  <a href="index.html" class="logo-link"><img src="assets/logo-primary-navy.svg" alt="Daybreak Cards" class="header-logo" /></a>
+  <div class="icon-btn" id="darkToggle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg></div>
+</div>
+
+<div class="wrap">
+  <div class="bento-wrap" id="bentoWrap">
+    <div class="bento">
+      <a class="tile t-inventory" href="inventory.html" style="text-decoration:none;color:inherit;">
+        <div class="live-badge"><span class="dot"></span>Synced live</div>
+        <div class="inv-visual">
+          <img class="c1" src="https://images.pokemontcg.io/base1/58_hires.png" alt="">
+          <img class="c2" src="https://images.pokemontcg.io/base1/4_hires.png" alt="">
+        </div>
+        <div class="tile-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        <div class="tile-title">Inventory</div>
+        <div class="tile-sub">Updates the moment a card is scanned in at a show</div>
+      </a>
+
+      <a class="tile tile-navy t-show" href="events.html" style="text-decoration:none;color:inherit;">
+        <div class="show-eyebrow" style="color:var(--red-2);">NEXT SHOW</div>
+        <div class="tile-title">Hobby Hangout XL</div>
+        <div class="tile-sub">Sat, Nov 14 · Carriageworks, Sydney</div>
+      </a>
+
+      <a class="tile tile-navy t-about" href="about.html" style="text-decoration:none;color:inherit;">
+        <img class="about-crane" src="assets/logo-crane-white.svg" alt="" style="position:absolute;bottom:-10px;right:-6px;width:120px;opacity:.95;" />
+        <div class="tile-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg></div>
+        <div class="tile-title">About us</div>
+        <div class="tile-sub">How Daybreak got started</div>
+      </a>
+
+      <a class="tile t-faq" href="faq.html" style="text-decoration:none;color:inherit;">
+        <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M9.5 9a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 3.5"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg></div>
+        <div class="tile-title">FAQ</div>
+        <div class="tile-sub">Common questions</div>
+      </a>
+
+      <a class="tile tile-navy t-sell" href="sell.html" style="text-decoration:none;color:inherit;">
+        <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 6.5L21 11l-6.5 2.5L12 20l-2.5-6.5L3 11l6.5-2.5z"/></svg></div>
+        <div class="tile-title">Sell to us</div>
+        <div class="tile-sub">Get a quote</div>
+      </a>
+
+      <a class="tile t-wanted" href="wanted.html" style="text-decoration:none;color:inherit;">
+        <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div>
+        <div class="tile-title">Wanted</div>
+        <div class="tile-sub">Tell us what to bring</div>
+      </a>
+    </div>
+
+    <div class="footer-row" style="justify-content:center;">
+      <div class="footer-note">DAYBREAK CARDS</div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('darkToggle').addEventListener('click', () => document.body.classList.toggle('dark'));
+
+document.getElementById('menuBtn').addEventListener('click', () => {
+  document.getElementById('menuDrawer').classList.add('show');
+  document.getElementById('menuOverlay').classList.add('show');
+});
+document.getElementById('menuClose').addEventListener('click', closeMenu);
+document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+function closeMenu(){
+  document.getElementById('menuDrawer').classList.remove('show');
+  document.getElementById('menuOverlay').classList.remove('show');
+}
+
+</script>
+
+<div class="cart-overlay" id="menuOverlay"></div>
+<div class="cart-drawer" id="menuDrawer">
+  <div class="cart-head">
+    <div class="cart-title">Menu</div>
+    <button class="cart-close" id="menuClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="cart-items">
+    <a href="index.html" class="menu-link">Home</a>
+    <a href="inventory.html" class="menu-link">Inventory</a>
+    <a href="events.html" class="menu-link">Events</a>
+    <a href="about.html" class="menu-link">About</a>
+    <a href="faq.html" class="menu-link">FAQ</a>
+    <a href="sell.html" class="menu-link">Sell to us</a>
+    <a href="wanted.html" class="menu-link">Wanted</a>
+  </div>
+</div>
+</body>
+</html>

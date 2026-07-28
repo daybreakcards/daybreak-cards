@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About · Daybreak Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="icon-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></div>
+  <a href="index.html" class="logo-link"><img src="assets/logo-primary-navy.svg" alt="Daybreak Cards" class="header-logo" /></a>
+  <div class="icon-btn" id="darkToggle"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></svg></div>
+</div>
+
+<nav class="page-nav">
+  <a href="index.html">Home</a>
+  <a href="inventory.html">Inventory</a>
+  <a href="events.html">Events</a>
+  <a href="about.html" class="active">About</a>
+  <a href="faq.html">FAQ</a>
+  <a href="sell.html">Sell to us</a>
+  <a href="wanted.html">Wanted</a>
+</nav>
+
+<div class="wrap">
+  <div class="subpage show">
+    <img class="about-mark" src="assets/logo-crane-navy.svg" alt="" />
+    <div class="subpage-head">
+      <div class="subpage-title">About us</div>
+      <div class="subpage-sub">How Daybreak got started</div>
+    </div>
+    <p class="about-copy">It started with a shoebox of cards from a decade of on-and-off collecting, and a spreadsheet that had stopped making sense. Weekends turned into local shows — buying, selling, chasing cards we just loved the art of. <strong>Daybreak Cards</strong> grew out of that, one folding table at a time.</p>
+    <p class="about-copy">Every card on this site has passed through our hands first — checked under good light, sleeved, and priced by us. No bot-run price feeds, no drop-shipped inventory.</p>
+    <div class="pull-quote">We built Daybreak to make the show-table experience better — everything we didn't love about the other side of the table, done our own way.</div>
+  </div>
+</div>
+
+<script>
+document.getElementById('darkToggle').addEventListener('click', () => document.body.classList.toggle('dark'));
+
+document.getElementById('menuBtn').addEventListener('click', () => {
+  document.getElementById('menuDrawer').classList.add('show');
+  document.getElementById('menuOverlay').classList.add('show');
+});
+document.getElementById('menuClose').addEventListener('click', closeMenu);
+document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+function closeMenu(){
+  document.getElementById('menuDrawer').classList.remove('show');
+  document.getElementById('menuOverlay').classList.remove('show');
+}
+
+</script>
+
+<div class="cart-overlay" id="menuOverlay"></div>
+<div class="cart-drawer" id="menuDrawer">
+  <div class="cart-head">
+    <div class="cart-title">Menu</div>
+    <button class="cart-close" id="menuClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="cart-items">
+    <a href="index.html" class="menu-link">Home</a>
+    <a href="inventory.html" class="menu-link">Inventory</a>
+    <a href="events.html" class="menu-link">Events</a>
+    <a href="about.html" class="menu-link">About</a>
+    <a href="faq.html" class="menu-link">FAQ</a>
+    <a href="sell.html" class="menu-link">Sell to us</a>
+    <a href="wanted.html" class="menu-link">Wanted</a>
+  </div>
+</div>
+</body>
+</html>
